@@ -1,6 +1,11 @@
-package day5
+package main
 
-import "slices"
+import (
+	"fmt"
+	"os"
+	"path"
+	"slices"
+)
 
 type RangeMap struct {
 	sourceStart int
@@ -36,4 +41,19 @@ func Run(initialSeeds []int, seedToSoil, soilToFertilizer, fertilizerToWater, wa
 		dests[idx] = location
 	}
 	return slices.Min(dests)
+}
+
+func main() {
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
+	}
+	seeds, maps, err := ParseFile(path.Join(dir, "input.txt"))
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
+	}
+	output := Run(seeds, maps[0], maps[1], maps[2], maps[3], maps[4], maps[5], maps[6])
+	fmt.Println("Result is ==>:", output)
 }
