@@ -5,7 +5,8 @@ import "testing"
 func TestExample(t *testing.T) {
 	testCases := []struct {
 		input             []int
-		output            int
+		part1             int
+		part2             int
 		seedToSoil        []RangeMap
 		soilToFertilizer  []RangeMap
 		fertilizerToWater []RangeMap
@@ -119,14 +120,19 @@ func TestExample(t *testing.T) {
 					rangeLength: 4,
 				},
 			},
-			input:  []int{79, 14, 55, 13},
-			output: 35,
+			input: []int{79, 14, 55, 13},
+			part1: 35,
+			part2: 46,
 		},
 	}
 	for _, testCase := range testCases {
 		output := Run(testCase.input, testCase.seedToSoil, testCase.soilToFertilizer, testCase.fertilizerToWater, testCase.waterToLight, testCase.lightToTemp, testCase.tempToHumid, testCase.humidToLocation)
-		if output != testCase.output {
-			t.Errorf("Expected output to be: %d, recevied: %d", testCase.output, output)
+		if output != testCase.part1 {
+			t.Errorf("Expected part1 to be: %d, recevied: %d", testCase.part1, output)
+		}
+		part2Output := RunPart2(testCase.input, testCase.seedToSoil, testCase.soilToFertilizer, testCase.fertilizerToWater, testCase.waterToLight, testCase.lightToTemp, testCase.tempToHumid, testCase.humidToLocation)
+		if part2Output != testCase.part2 {
+			t.Errorf("Expect part2 result to be: %d, recevied: %d", testCase.part2, part2Output)
 		}
 	}
 
