@@ -51,7 +51,9 @@ func determineRank(inp deal) int {
 }
 
 func RunPart1(inputs []deal) int {
-	outputs := &dealHeap{}
+	outputs := &dealSorter{
+		cardsMap: cardsMap,
+	}
 	for _, input := range inputs {
 		(&input).rank = determineRank(input)
 		outputs.Push(input)
@@ -59,14 +61,7 @@ func RunPart1(inputs []deal) int {
 
 	sort.Sort(outputs)
 
-	idx := outputs.Len()
-	total := 0
-	for outputs.Len() > 0 {
-		output := outputs.Pop()
-		total += idx * output.bid
-		idx -= 1
-	}
-	return total
+	return outputs.Total()
 }
 
 func SolvePart1() {

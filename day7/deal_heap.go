@@ -1,43 +1,59 @@
 package main
 
-import "strings"
+import (
+	"strings"
+)
 
-type dealHeap []deal
-
-func (h *dealHeap) Len() int {
-	return len(*h)
+type dealSorter struct {
+	deals    []deal
+	cardsMap map[string]int
 }
 
-func (h *dealHeap) Less(i, j int) bool {
-	firstDeal := (*h)[i]
-	secondDeal := (*h)[j]
+func (h *dealSorter) Len() int {
+	return len(h.deals)
+}
+
+func (h *dealSorter) Less(i, j int) bool {
+	firstDeal := h.deals[i]
+	secondDeal := h.deals[j]
 	if firstDeal.rank == secondDeal.rank {
 		firstDealCards := strings.Split(firstDeal.hand, "")
 		secondDealCards := strings.Split(secondDeal.hand, "")
 		for idx, firstDealCard := range firstDealCards {
 			secondDealCard := secondDealCards[idx]
-			if cardsMap[firstDealCard] == cardsMap[secondDealCard] {
+			if h.cardsMap[firstDealCard] == h.cardsMap[secondDealCard] {
 				continue
 			}
-			return cardsMap[firstDealCard] < cardsMap[secondDealCard]
+			return h.cardsMap[firstDealCard] < h.cardsMap[secondDealCard]
 		}
 	}
 
 	return firstDeal.rank < secondDeal.rank
 }
 
-func (h *dealHeap) Swap(i, j int) {
-	(*h)[i], (*h)[j] = (*h)[j], (*h)[i]
+func (h *dealSorter) Swap(i, j int) {
+	h.deals[i], h.deals[j] = h.deals[j], h.deals[i]
 }
 
-func (h *dealHeap) Push(x deal) {
-	*h = append(*h, x)
+func (h *dealSorter) Push(x deal) {
+	h.deals = append(h.deals, x)
 }
 
-func (h *dealHeap) Pop() deal {
-	old := *h
+func (h *dealSorter) Pop() deal {
+	old := h.deals
 	n := len(old)
 	x := old[n-1]
-	*h = old[0 : n-1]
+	h.deals = old[0 : n-1]
 	return x
+}
+
+func (h *dealSorter) Total() int {
+	idx := h.Len()
+	total := 0
+	for h.Len() > 0 {
+		output := h.Pop()
+		total += idx * output.bid
+		idx -= 1
+	}
+	return total
 }

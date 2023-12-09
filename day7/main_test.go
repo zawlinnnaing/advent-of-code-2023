@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestPart1(t *testing.T) {
+func TestRun(t *testing.T) {
 	inputs := []deal{
 		{hand: "32T3K", bid: 765},
 		{
@@ -22,9 +22,30 @@ func TestPart1(t *testing.T) {
 			bid:  483,
 		},
 	}
-	expected := 6440
-	output := RunPart1(inputs)
-	if expected != output {
-		t.Errorf("Expected total to be: %d, received: %d", expected, output)
+	testCases := []struct {
+		run      func(inputs []deal) int
+		expected int
+		name     string
+	}{
+		{
+			name:     "Part1",
+			run:      RunPart1,
+			expected: 6440,
+		},
+		{
+			name:     "Part2",
+			run:      RunPart2,
+			expected: 5905,
+		},
 	}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			expected := testCase.expected
+			output := testCase.run(inputs)
+			if expected != output {
+				t.Errorf("Expected total to be: %d, received: %d", expected, output)
+			}
+		})
+	}
+
 }
