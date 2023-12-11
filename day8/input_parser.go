@@ -6,7 +6,7 @@ import (
 )
 
 func parseInput(file string) (string, NetworkMap, error) {
-	mappings := make(map[string][2]string)
+	mappings := make(NetworkMap, 0)
 	content, err := os.ReadFile(file)
 	if err != nil {
 		return "", mappings, err
@@ -37,7 +37,7 @@ func parseInput(file string) (string, NetworkMap, error) {
 		values[1] = strings.TrimSpace(values[1])
 
 		// Store the key-value pair in the map
-		mappings[key] = [2]string{values[0], values[1]}
+		mappings = append(mappings, [3]string{key, values[0], values[1]})
 	}
 
 	return direction, mappings, nil

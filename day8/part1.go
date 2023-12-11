@@ -2,11 +2,19 @@ package main
 
 import "strings"
 
-type NetworkMap map[string][2]string
+type NetworkMap [][3]string
 
-func RunPart1(direction string, network NetworkMap) int {
+func RunPart1(direction string, mappings NetworkMap) int {
 	numSteps := 0
 	directions := strings.Split(direction, "")
+	network := make(map[string][2]string)
+	for _, mapping := range mappings {
+		key := mapping[0]
+		value := mapping[1:]
+		network[key] = [2]string{
+			value[0], value[1],
+		}
+	}
 	currentPos := network["AAA"]
 	for {
 		for _, dir := range directions {

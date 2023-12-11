@@ -2,7 +2,7 @@ package main
 
 import "testing"
 
-func TestProblem(t *testing.T) {
+func TestPart1(t *testing.T) {
 	testCases := []struct {
 		direction string
 		network   NetworkMap
@@ -10,19 +10,19 @@ func TestProblem(t *testing.T) {
 	}{
 		{
 			direction: "RL",
-			network: map[string][2]string{
-				"AAA": {"BBB", "CCC"},
-				"BBB": {"DDD", "EEE"},
-				"CCC": {"ZZZ", "GGG"},
+			network: NetworkMap{
+				{"AAA", "BBB", "CCC"},
+				{"BBB", "DDD", "EEE"},
+				{"CCC", "ZZZ", "GGG"},
 			},
 			expSteps: 2,
 		},
 		{
 			direction: "LLR",
-			network: map[string][2]string{
-				"AAA": {"BBB", "BBB"},
-				"BBB": {"AAA", "ZZZ"},
-				"ZZZ": {"ZZZ", "ZZZ"},
+			network: NetworkMap{
+				{"AAA", "BBB", "BBB"},
+				{"BBB", "AAA", "ZZZ"},
+				{"ZZZ", "ZZZ", "ZZZ"},
 			},
 			expSteps: 6,
 		},
@@ -35,4 +35,24 @@ func TestProblem(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestPart2(t *testing.T) {
+	direction := "LR"
+	mappings := NetworkMap{
+		{"11A", "11B", "XXX"},
+		{"11B", "XXX", "11Z"},
+		{"11Z", "11B", "XXX"},
+		{"22A", "22B", "XXX"},
+		{"22B", "22C", "22C"},
+		{"22C", "22Z", "22Z"},
+		{"22Z", "22B", "22B"},
+		{"XXX", "XXX", "XXX"},
+	}
+	expSteps := 6
+	output := RunPart2(direction, mappings)
+	if expSteps != output {
+		t.Errorf("Expected steps to be: %d, received: %d", expSteps, output)
+	}
+
 }
