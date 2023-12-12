@@ -9,26 +9,31 @@ func checkIfAllZeros(history []int) bool {
 	return true
 }
 
+func getSteps(history []int) [][]int {
+	steps := [][]int{
+		history,
+	}
+	i := 0
+	for {
+		currentStep := steps[i]
+		nextStep := []int{}
+		for j := 0; j < len(currentStep)-1; j++ {
+			diff := currentStep[j+1] - currentStep[j]
+			nextStep = append(nextStep, diff)
+		}
+		steps = append(steps, nextStep)
+		if checkIfAllZeros(nextStep) {
+			break
+		}
+		i += 1
+	}
+	return steps
+}
+
 func RunPart1(histories [][]int) int {
 	total := 0
 	for _, history := range histories {
-		steps := [][]int{
-			history,
-		}
-		i := 0
-		for {
-			currentStep := steps[i]
-			nextStep := []int{}
-			for j := 0; j < len(currentStep)-1; j++ {
-				diff := currentStep[j+1] - currentStep[j]
-				nextStep = append(nextStep, diff)
-			}
-			steps = append(steps, nextStep)
-			if checkIfAllZeros(nextStep) {
-				break
-			}
-			i += 1
-		}
+		steps := getSteps(history)
 		prevValue := 0
 		for k := len(steps) - 1; k >= 0; k-- {
 			currentStep := steps[k]
