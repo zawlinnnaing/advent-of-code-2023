@@ -1,9 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 var dirs = [4][2]int{
 	{0, 1}, {0, -1}, {1, 0}, {-1, 0},
+}
+
+var pipeDirMap = map[string][2][2]int{
+	"|": {
+		{-1, 0}, {1, 0},
+	},
+	"-": {{0, -1}, {0, 1}},
+	"F": {{1, 0}, {0, 1}},
+	"7": {{1, 0}, {0, -1}},
+	"L": {{0, 1}, {-1, 0}},
+	"J": {{0, -1}, {-1, 0}},
 }
 
 func findStartPoint(maps [][]string) Point {
@@ -20,13 +34,85 @@ func findStartPoint(maps [][]string) Point {
 	return startPoint
 }
 
-func findPath(maze [][]string, currentPoint Point, seen [][]bool, initialCall bool, path *Path) bool {
-	maxRowIdx := len(maze)
-	maxColIdx := len(maze[0])
+func outOfBound(pipes [][]string, point Point) bool {
+	maxRowIdx := len(pipes)
+	maxColIdx := len(pipes[0])
+	return point.rowIdx >= maxRowIdx || point.rowIdx < 0 || point.colIdx < 0 || point.colIdx >= maxColIdx
+}
+
+func canWalk(pipes [][]string, currentPoint Point, nextPoint Point) bool {
+	if outOfBound(pipes, nextPoint) {
+		return false
+	}
+	currentPipe := pipes[currentPoint.rowIdx][currentPoint.colIdx]
+	if currentPipe == "S" {
+		return true
+	}
+	nextPipe := pipes[nextPoint.rowIdx][nextPoint.colIdx]
+	if nextPipe == "." {
+		return false
+	}
+	walkableCoords := pipeDirMap[currentPipe]
+	isWalkable := false
+	relativeCoord := [2]int{0, 0}
+	for _, coords := range walkableCoords {
+		if currentPoint.rowIdx+coords[0] == nextPoint.rowIdx && currentPoint.colIdx+coords[1] == nextPoint.colIdx {
+			isWalkable = true
+			relativeCoord = coords
+		}
+	}
+	if !isWalkable {
+		return false
+	}
+	switch currentPipe {
+	case "|":
+		if nextPipe == "|" {
+			return true
+		}
+		if relativeCoord == walkableCoords[0] {
+			return strings.Contains("F7", nextPipe)
+		}
+		return strings.Contains("LJ", nextPipe)
+	case "-":
+		fmt.Println("relativeCoord", relativeCoord, nextPipe)
+		if nextPipe == "-" {
+			return true
+		}
+		if relativeCoord == walkableCoords[0] {
+			return strings.Contains("FL", nextPipe)
+		}
+		return strings.Contains("7J", nextPipe)
+	case "F":
+		if relativeCoord == walkableCoords[0] {
+			return strings.Contains("|LJ", nextPipe)
+		}
+		return strings.Contains("-7J", nextPipe)
+	case "7":
+		if relativeCoord == walkableCoords[0] {
+			return strings.Contains("|LJ", nextPipe)
+		}
+		return strings.Contains("-LF", nextPipe)
+	case "L":
+		if relativeCoord == walkableCoords[0] {
+			return strings.Contains("7J-", nextPipe)
+		}
+		return strings.Contains("|7F", nextPipe)
+	case "J":
+		if relativeCoord == walkableCoords[0] {
+			return strings.Contains("-FL", nextPipe)
+		}
+		return strings.Contains("|7F", nextPipe)
+	}
+
+	return false
+
+}
+
+func walk(maze [][]string, currentPoint Point, seen [][]bool, initialCall bool, path *Path) bool {
 
 	fmt.Println("currentPoint", currentPoint, path)
 	//Base case: Off the map
-	if currentPoint.rowIdx >= maxRowIdx || currentPoint.rowIdx < 0 || currentPoint.colIdx < 0 || currentPoint.colIdx >= maxColIdx {
+	if outOfBound(maze, currentPoint) {
 		return false
 	}
 	// Base case: hit the wall
@@ -44,10 +130,11 @@ func findPath(maze [][]string, currentPoint Point, seen [][]bool, initialCall bo
 	seen[currentPoint.rowIdx][currentPoint.colIdx] = true
 	path.Push(currentPoint)
 	for _, dir := range dirs {
-		if findPath(maze, Point{
+		nextPoint := Point{
 			rowIdx: currentPoint.rowIdx + dir[0],
 			colIdx: currentPoint.colIdx + dir[1],
-		}, seen, false, path) {
+		}
+		if canWalk(maze, currentPoint, nextPoint) && walk(maze, nextPoint, seen, false, path) {
 			return true
 		}
 	}
@@ -63,7 +150,7 @@ func RunPart1(maze [][]string) int {
 		seen = append(seen, innerSeen)
 	}
 	path := Path{points: make([]Point, 0)}
-	findPath(maze, startPoint, seen, true, &path)
+	walk(maze, startPoint, seen, true, &path)
 	fmt.Println("path", path, path.Len())
 	return path.Len() / 2
 }
