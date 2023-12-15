@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -74,7 +73,6 @@ func canWalk(pipes [][]string, currentPoint Point, nextPoint Point) bool {
 		}
 		return strings.Contains("LJ", nextPipe)
 	case "-":
-		fmt.Println("relativeCoord", relativeCoord, nextPipe)
 		if nextPipe == "-" {
 			return true
 		}
@@ -109,8 +107,6 @@ func canWalk(pipes [][]string, currentPoint Point, nextPoint Point) bool {
 }
 
 func walk(maze [][]string, currentPoint Point, seen [][]bool, initialCall bool, path *Path) bool {
-
-	fmt.Println("currentPoint", currentPoint, path)
 	//Base case: Off the map
 	if outOfBound(maze, currentPoint) {
 		return false
@@ -138,7 +134,6 @@ func walk(maze [][]string, currentPoint Point, seen [][]bool, initialCall bool, 
 			return true
 		}
 	}
-	path.Pop()
 	return false
 }
 
@@ -151,6 +146,5 @@ func RunPart1(maze [][]string) int {
 	}
 	path := Path{points: make([]Point, 0)}
 	walk(maze, startPoint, seen, true, &path)
-	fmt.Println("path", path, path.Len())
 	return path.Len() / 2
 }
