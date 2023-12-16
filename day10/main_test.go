@@ -17,6 +17,14 @@ func TestProblem(t *testing.T) {
 		{"|", "F", "-", "-", "J"},
 		{"L", "J", ".", ".", "."},
 	}
+
+	map3, err := parseInput("./map3.txt")
+	map4, err := parseInput("./map4.txt")
+	map5, err := parseInput("./map5.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	testCases := []struct {
 		name    string
 		pattern [][]string
@@ -34,6 +42,24 @@ func TestProblem(t *testing.T) {
 			pattern: map2,
 			exp:     8,
 			run:     RunPart1,
+		},
+		{
+			name:    "Part2 - Map3",
+			pattern: map3,
+			exp:     4,
+			run:     RunPart2,
+		},
+		{
+			name:    "Part2 - Map4",
+			pattern: map4,
+			exp:     8,
+			run:     RunPart2,
+		},
+		{
+			name:    "Part2 - map5",
+			pattern: map5,
+			exp:     10,
+			run:     RunPart2,
 		},
 	}
 
