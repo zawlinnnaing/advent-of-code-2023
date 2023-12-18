@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+	"sync"
+)
 
 func Unfold(input Input) Input {
 	partsLen := len(input.parts)
@@ -13,13 +17,18 @@ func Unfold(input Input) Input {
 }
 
 func RunPart2(inputs []Input) int {
-	total := 0
+	total := NewTotalCounter()
+	wg := sync.WaitGroup{}
 	for _, input := range inputs {
-		unfolded := Unfold(input)
-		//cacheMap := map[string]map[string]int{}
-		result := count(unfolded.parts, unfolded.records)
-		fmt.Println(unfolded, result)
-		total += result
+		wg.Add(1)
+		go func(input2 Input) {
+			unfolded := Unfold(input2)
+			result := count(strings.Join(unfolded.parts, ""), unfolded.records)
+			fmt.Println("finished", input2.parts, input2.records)
+			total.Add(result)
+			wg.Done()
+		}(input)
 	}
-	return total
+	wg.Wait()
+	return total.Get()
 }
