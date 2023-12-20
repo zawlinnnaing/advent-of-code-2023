@@ -15,7 +15,7 @@ func RunPart1(inputs []Input) int {
 	totalResult := 0
 
 	for _, input := range inputs {
-		totalResult += count(strings.Join(input.parts, ""), input.records)
+		totalResult += count(strings.Join(input.parts, ""), &input.records)
 	}
 	return totalResult
 }

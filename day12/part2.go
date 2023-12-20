@@ -23,7 +23,7 @@ func RunPart2(inputs []Input) int {
 		wg.Add(1)
 		go func(input2 Input) {
 			unfolded := Unfold(input2)
-			result := count(strings.Join(unfolded.parts, ""), unfolded.records)
+			result := count(strings.Join(unfolded.parts, ""), &unfolded.records)
 			fmt.Println("finished", input2.parts, input2.records)
 			total.Add(result)
 			wg.Done()
