@@ -17,6 +17,12 @@ func TestProblem(t *testing.T) {
 			inputFile: "./data/example.txt",
 			expected:  405,
 		},
+		{
+			name:      "Part2",
+			run:       runPart2,
+			inputFile: "./data/example.txt",
+			expected:  400,
+		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {

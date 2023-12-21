@@ -6,7 +6,7 @@ import (
 
 func CheckReflection(pattern Pattern, firstPoint, secondPoint int) bool {
 	currentPoint, nextPoint := firstPoint, secondPoint
-	for currentPoint > 0 && nextPoint < len(pattern) {
+	for currentPoint >= 0 && nextPoint < len(pattern) {
 		if !reflect.DeepEqual(pattern[currentPoint], pattern[nextPoint]) {
 			return false
 		}
@@ -34,7 +34,6 @@ func FindReflectionPoint(pattern Pattern) (int, int) {
 }
 
 func runPart1(patterns []Pattern) int {
-	//Check columns
 	total := 0
 	for _, pattern := range patterns {
 		firstPoint, secondPoint := FindReflectionPoint(pattern)
