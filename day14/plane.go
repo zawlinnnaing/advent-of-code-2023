@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Plane [][]string
 
@@ -27,14 +30,29 @@ func (p *Plane) Tilt() {
 	}
 }
 
-func (p *Plane) Spin() {
+func (p *Plane) Spin(direction [2]int) {
 	maxRows := len(*p)
 	maxCols := len((*p)[0])
-	for rowIdx, row := range *p {
-		for colIdx, _ := range row {
-			for _, direction := range directions {
+	if direction[0] > 0 {
+		for rowIdx := maxRows - 1; rowIdx >= 0; rowIdx-- {
+			row := (*p)[rowIdx]
+			for colIdx, _ := range row {
 				p.MoveByOffset(rowIdx, colIdx, direction, maxRows, maxCols)
 			}
+		}
+		return
+	}
+	if direction[1] > 0 {
+		for rowIdx, _ := range *p {
+			for colIdx := maxCols - 1; colIdx >= 0; colIdx-- {
+				p.MoveByOffset(rowIdx, colIdx, direction, maxRows, maxCols)
+			}
+		}
+		return
+	}
+	for rowIdx, row := range *p {
+		for colIdx, _ := range row {
+			p.MoveByOffset(rowIdx, colIdx, direction, maxRows, maxCols)
 		}
 	}
 }
@@ -45,6 +63,19 @@ func (p *Plane) String() string {
 		str += fmt.Sprintf("%v\n", row)
 	}
 	return str
+}
+
+func (p *Plane) parse(plane string) {
+	var newPlane Plane
+	rows := strings.Split(strings.ReplaceAll(strings.ReplaceAll(plane, "[", ""), "]", ""), "\n")
+
+	for _, row := range rows {
+		if row == "" {
+			continue
+		}
+		newPlane = append(newPlane, strings.Split(row, " "))
+	}
+	*p = newPlane
 }
 
 func (p *Plane) TotalLoad() int {

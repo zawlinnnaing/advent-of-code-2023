@@ -15,6 +15,12 @@ func TestProblem(t *testing.T) {
 			run:      RunPart1,
 			name:     "Part1",
 		},
+		{
+			filePath: "./data/example.txt",
+			expect:   64,
+			run:      RunPart2,
+			name:     "Part2",
+		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
