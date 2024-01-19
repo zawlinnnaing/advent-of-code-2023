@@ -54,7 +54,7 @@ func getDigVertices(plans []DigPlan) []Vertex {
 	return vertices
 }
 
-func getInterior(vertices []Vertex) int {
+func getArea(vertices []Vertex) float64 {
 	var area float64 = 0
 	numVertices := len(vertices)
 	for vertexIdx, vertex := range vertices {
@@ -62,7 +62,11 @@ func getInterior(vertices []Vertex) int {
 		area += float64(vertex.row*vertices[j].col - vertex.col*vertices[j].row)
 	}
 	area = math.Abs(area) / 2
+	return area
+}
+
+func getInterior(area float64, numOfPoint int) int {
 	// Using pick's Theorem to get number of points interior, https://en.wikipedia.org/wiki/Pick%27s_theorem
-	interior := area + 1 - (float64(numVertices) / 2)
-	return int(interior) + numVertices
+	interior := area + 1 - (float64(numOfPoint) / 2)
+	return int(interior) + numOfPoint
 }
