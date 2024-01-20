@@ -8,5 +8,5 @@ func main() {
 		panic(err)
 	}
 	part1 := RunPart1(workflows, inputMaps)
-	fmt.Println("Solution for part1 ==>", partå1)
+	fmt.Println("Solution for part1 ==>", part1)
 }
