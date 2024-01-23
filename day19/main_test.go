@@ -15,6 +15,12 @@ func TestProblem(t *testing.T) {
 			expected:  19114,
 			run:       RunPart1,
 		},
+		{
+			name:      "Part2",
+			inputFile: "./data/example.txt",
+			expected:  167409079868000,
+			run:       RunPart2,
+		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
@@ -24,7 +30,7 @@ func TestProblem(t *testing.T) {
 			}
 			output := testCase.run(workflows, inputMaps)
 			if output != testCase.expected {
-				t.Errorf("Expected %d, received: %d", testCase.expected, output)
+				t.Errorf("Expected %d, received: %d, difference: %d", testCase.expected, output, testCase.expected-output)
 			}
 		})
 	}

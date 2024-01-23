@@ -9,4 +9,6 @@ func main() {
 	}
 	part1 := RunPart1(workflows, inputMaps)
 	fmt.Println("Solution for part1 ==>", part1)
+	part2 := RunPart2(workflows, inputMaps)
+	fmt.Println("Solution for part2 ==>", part2)
 }
